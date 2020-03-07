@@ -6,22 +6,30 @@ module.exports = {
       {
         id: 1,
         published_date: '2008-11-11',
-        order_id:1
+        order_id:1,
+        createdAt: new Date(),
+        updatedAt: new Date(),
       },
       {
         id: 2,
         published_date: '2008-11-11',
-        order_id:2
+        order_id:2,
+        createdAt: new Date(),
+        updatedAt: new Date(),
       },
       {
         id: 3,
         published_date:'2008-11-12',
-        order_id:3
+        order_id:3,
+        createdAt: new Date(),
+        updatedAt: new Date(),
       },
       {
         id: 4,
         published_date:'2008-11-12',
-        order_id:4
+        order_id:4,
+        createdAt: new Date(),
+        updatedAt: new Date(),
       }
     ], {});
   },
