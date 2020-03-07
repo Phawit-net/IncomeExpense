@@ -1,10 +1,13 @@
 import React, { Component } from 'react'
 import RecordCard from './RecordCard'
-import { Row, Button, Modal,Select, Radio } from 'antd'
+import { Row, Button} from 'antd'
 import "./Transaction.css";
-const { Option } = Select
+import AddModal from './AddModal';
+import { addNote } from '../../redux/actions/actions';
+import {connect} from 'react-redux'
+import store from '../../redux/store/store'
 
-export default class Transactions extends Component {
+class Transactions extends Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -26,6 +29,8 @@ export default class Transactions extends Component {
       //     account:'cash'
       //   }
       // ]
+      loading: false,
+      visible: false,
       cardList: [
         {
           date: '06-02-2020',
@@ -38,8 +43,8 @@ export default class Transactions extends Component {
     }
   };
 
-
-  showModal = () => {
+  showModal = (e) => {
+    console.log(this.state);
     this.setState({
       visible: true,
     });
@@ -59,6 +64,10 @@ export default class Transactions extends Component {
     });
   };
 
+  handleChange(value) {
+    console.log(value); // { key: "lucy", label: "Lucy (101)" }
+  }
+
   render() {
     return (
       <>
@@ -72,24 +81,18 @@ export default class Transactions extends Component {
             cardList={this.state.cardList}
           />
         </Row>
-        <Modal
-          title={[
-            <Radio.Group style={{display:'flex',justifyContent:'center'}} size="large" buttonStyle="solid">
-              <Radio.Button className='inc'style={{fontSize:"20px"}} value="large">Income</Radio.Button>
-              <Radio.Button className='exp'style={{fontSize:"20px"}} value="default">Expense</Radio.Button>
-              <Radio.Button className='trn'style={{fontSize:"20px"}} value="small">Tranfer</Radio.Button>
-            </Radio.Group>
-          ]}
-          visible={this.state.visible}
-          onOk={this.handleOk}
-          onCancel={this.handleCancel}
-          
-        >
-          <p>Some contents...</p>
-          <p>Some contents...</p>
-          <p>Some contents...</p>
-        </Modal>
+        <AddModal 
+          handleOk={this.handleOk}
+          handleCancel={this.handleCancel}
+          visible = {this.state.visible}
+        />
       </>
     )
   }
 }
+
+const mapDispatchToProps ={
+  addNewNote : addNote 
+}
+
+export default connect(null ,mapDispatchToProps )(Transactions)
