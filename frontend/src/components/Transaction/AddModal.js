@@ -56,14 +56,35 @@ export default class AddModal extends Component {
   }
 
   onFinish = (values) => {
-    console.log("ADD")
-    console.log(values)
-    // console.log(this.state)
     Axios.post("/addDate", {
       published_date: this.state.dateValue
     })
       .then(result => {
-        console.log(result)
+        Axios.get(`/dateId/${this.state.dateValue}`)
+          .then(result => {
+            this.setState({
+              dateId: result.data
+            });
+          })
+          .then(date_result => {
+            console.log(this.state)
+            Axios.post("/addOrder", {
+              account_id: this.state.accountValue,
+              category_id: this.state.categoryValue,
+              amount: values.amount,
+              description: values.description,
+              date_id: this.state.dateId[0].id,
+            })
+              .then(result => {
+                console.log(result)
+              })
+              .catch(err => {
+                console.error(err)
+              })
+          })
+          .catch(err => {
+            console.error(err)
+          })
       })
       .catch(err => {
         Axios.get(`/dateId/${this.state.dateValue}`)
@@ -93,10 +114,7 @@ export default class AddModal extends Component {
           })
       })
     this.formRef.current.resetFields();
-  }
-
-  handleChange(value) {
-    console.log(`selected ${value}`);
+    window.location.reload(true);
   }
 
   formRef = React.createRef();
@@ -176,7 +194,8 @@ export default class AddModal extends Component {
                   <Button
                     type="primary"
                     loading={loading}
-                    htmlType="submit">
+                    htmlType="submit"
+                    onClick = {handleOk}>
                     ADD
                 </Button>
                 </Form.Item>

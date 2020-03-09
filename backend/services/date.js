@@ -26,10 +26,10 @@ module.exports = (app, db) => {
 
     app.get('/date', (req, res) => {
         db.date.findAll({
-            attributes: ['published_date'],
+            attributes: ['published_date','id'],
+            order: [['published_date', 'DESC']],
             include: [{
                 model: db.order,
-                // attributes: ['account.name'],
                 include: [{
                     model: db.account,
                     required: true,

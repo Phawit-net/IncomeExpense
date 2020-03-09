@@ -1,10 +1,10 @@
 import React, { Component } from 'react'
 import RecordCard from './RecordCard'
-import { Row, Button} from 'antd'
+import { Row, Button, Col } from 'antd'
 import "./Transaction.css";
 import AddModal from './AddModal';
 import { addNote } from '../../redux/actions/actions';
-import {connect} from 'react-redux'
+import { connect } from 'react-redux'
 import store from '../../redux/store/store'
 import Axios from '../../config/api.service'
 
@@ -20,11 +20,11 @@ class Transactions extends Component {
 
   componentDidMount() {
     Axios.get("/date")
-    .then(result => {
-      this.setState({
-        cardList : result.data
-      });
-    })
+      .then(result => {
+        this.setState({
+          cardList: result.data
+        });
+      })
   }
 
   showModal = (e) => {
@@ -56,23 +56,25 @@ class Transactions extends Component {
             <Button onClick={this.showModal}> + </Button>
           </div>
         </div>
-        <Row type='flex' justify='center' style={{ backgroundColor: 'f0f4f5' }}>
-          <RecordCard
-            cardList={this.state.cardList}
-          />
+        <Row type='flex' justify='center' style={{ backgroundColor: 'f0f4f5',display:'flex' , justifyContent:'center' }}>
+          <Col >
+            <RecordCard
+              cardList={this.state.cardList}
+            />
+          </Col>
         </Row>
-        <AddModal 
+        <AddModal
           handleOk={this.handleOk}
           handleCancel={this.handleCancel}
-          visible = {this.state.visible}
+          visible={this.state.visible}
         />
       </>
     )
   }
 }
 
-const mapDispatchToProps ={
-  addNewNote : addNote 
+const mapDispatchToProps = {
+  addNewNote: addNote
 }
 
-export default connect(null ,mapDispatchToProps )(Transactions)
+export default connect(null, mapDispatchToProps)(Transactions)

@@ -1,0 +1,8 @@
+.deleteBtn{
+    display: none;
+    color:#e25f51;
+}
+
+.block:hover .deleteBtn{
+    display: block;
+}
