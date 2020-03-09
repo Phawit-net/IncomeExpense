@@ -3,9 +3,10 @@ module.exports = (sequelize, DataTypes) => {
     const date = sequelize.define('date', {
         published_date: {
             type: DataTypes.DATEONLY,
-            // get: function() {
-            //     return moment(this.getDataValue('DateTime')).format('MM.YYYY')
-            //  }
+            get: function() {
+                return moment(this.getDataValue('published_date')).format('DD-MM-YYYY')
+             },
+            unique: true
         },
     })
     date.associate = function (models) {

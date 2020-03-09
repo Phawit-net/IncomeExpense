@@ -35,10 +35,10 @@ export default class RecordCard extends Component {
           <Col span={12}>
             <Row type='flex' align='middle'>
               <Col span={7}>
-                <span style={{ fontSize: '50px', padding: '0px' }}>{card.published_date.split('-')[2]}</span>
+                <span style={{ fontSize: '50px', padding: '0px' }}>{card.published_date.split('-')[0]}</span>
               </Col>
               <Col span={17}>
-                <div>{card.published_date}</div>
+                <div>{card.published_date.split('-').slice(1,3).join('.')}</div>
                 <Tag color="#2db7f5">friday</Tag>
               </Col>
             </Row>

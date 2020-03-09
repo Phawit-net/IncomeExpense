@@ -3,12 +3,13 @@ import { Row, Button, Modal, Select, Radio, Col, Form, Input, DatePicker, TimePi
 import Axios from '../../config/api.service'
 import moment from 'moment';
 
-const dateFormat = 'DD/MM/YYYY';
-const timeFormar = 'HH:mm';
 const { Option } = Select;
 const { TextArea } = Input;
-const config = {
-  rules: [{ type: 'object', required: true, message: 'Please select time!' }],
+const dateConfig = {
+  rules: [{ type: 'object', required: true, message: 'Please select Date!' }],
+};
+const timeConfig = {
+  rules: [{ type: 'object', required: true, message: 'Please select Date!' }],
 };
 
 export default class AddModal extends Component {
@@ -17,7 +18,12 @@ export default class AddModal extends Component {
     this.state = {
       type: 'Income',
       accounts: [],
-      categories: []
+      categories: [],
+      dateValue: '',
+      timeValue: '',
+      accountValue: '',
+      categoryValue: '',
+      dateId: ''
     };
   }
 
@@ -49,11 +55,51 @@ export default class AddModal extends Component {
     });
   }
 
-  submitForm = (e) => {
-    e.preventDefault();
+  onFinish = (values) => {
     console.log("ADD")
+    console.log(values)
+    // console.log(this.state)
+    Axios.post("/addDate", {
+      published_date: this.state.dateValue
+    })
+      .then(result => {
+        console.log(result)
+      })
+      .catch(err => {
+        Axios.get(`/dateId/${this.state.dateValue}`)
+          .then(result => {
+            this.setState({
+              dateId: result.data
+            });
+          })
+          .then(date_result => {
+            console.log(this.state)
+            Axios.post("/addOrder", {
+              account_id: this.state.accountValue,
+              category_id: this.state.categoryValue,
+              amount: values.amount,
+              description: values.description,
+              date_id: this.state.dateId[0].id,
+            })
+              .then(result => {
+                console.log(result)
+              })
+              .catch(err => {
+                console.error(err)
+              })
+          })
+          .catch(err => {
+            console.error(err)
+          })
+      })
+    this.formRef.current.resetFields();
   }
 
+  handleChange(value) {
+    console.log(`selected ${value}`);
+  }
+
+  formRef = React.createRef();
   render() {
     const { handleOk, handleCancel, loading, visible } = this.props;
     return (
@@ -71,100 +117,69 @@ export default class AddModal extends Component {
         footer={null}
       >
         <div style={{ display: 'flex', justifyContent: 'center' }}>
-          <Form onSubmit={this.submitForm}>
+          <Form onFinish={this.onFinish} ref={this.formRef}>
             <Row style={{ width: 450 }}>
-              <Col span={24}>
-                <Form.Item label="Date" {...config}>
-                  <DatePicker style={{ margin: '0px 10px' }} format={dateFormat} defaultValue={moment()} />
-                <TimePicker format={timeFormar} defaultValue={moment()} />
+              <Col span={12}>
+                <Form.Item name="date" label="Date" {...dateConfig}>
+                  <DatePicker format='YYYY-MM-DD' defaultOpenValue={moment()} onChange={(date, dateString) => { this.setState({ dateValue: dateString }) }} />
                 </Form.Item>
               </Col>
-            <Col span={24}>
-              <Form.Item label="Account">
-                {/* {getFieldDecorator('email', {
-                    rules: [
-                      {
-                        type: 'email',
-                        message: 'The input is not valid E-mail!',
-                      },
-                      {
-                        required: true,
-                        message: 'Please input your E-mail!',
-                      },
-                    ],
-                  })(
-                  )} */}
-                <Select
-                  labelInValue
-                  // defaultValue={{ key: 'lucy' }}
-                  style={{ width: 120 }}
-                  onChange={this.handleChange}>
-                  {this.state.accounts.map(account => (
-                    <Option value={account.id} key={account.id}>
-                      {account.name}
-                    </Option>
-                  ))}
-                </Select>
-              </Form.Item>
-            </Col>
-            <Col span={24}>
-              <Form.Item label="Category">
-                {/* {getFieldDecorator('email', {
-                      rules: [
-                        {
-                          type: 'email',
-                          message: 'The input is not valid E-mail!',
-                        },
-                        {
-                          required: true,
-                          message: 'Please input your E-mail!',
-                        },
-                      ],
-                    })(<Input />)} */}
-                <Select
-                  labelInValue
-                  // defaultValue={{ key: 'lucy' }}
-                  style={{ width: 120 }}
-                  onChange={this.handleChange}>
-                  {this.state.categories.map(category => (
-                    <Option value={category.id} key={category.id}>
-                      {category.name}
-                    </Option>
-                  ))}
-                </Select>
-              </Form.Item>
-            </Col>
-            <Col span={24}>
-              <Form.Item label="Amount">
-                {/* {getFieldDecorator('email', {
-                      rules: [
-                        {
-                          type: 'email',
-                          message: 'The input is not valid E-mail!',
-                        },
-                        {
-                          required: true,
-                          message: 'Please input your E-mail!',
-                        },
-                      ],
-                    })(<Input />)} */}
-                <Input />
-              </Form.Item>
-            </Col>
-            <Col span={24}>
-              <Form.Item label="Description"
-             rules={[{ required: true, message: 'Please input website!' }]}>
-                <TextArea rows={4} />
-              </Form.Item>
-            </Col>
-            <Col style={{display:'flex', justifyContent:'center'}}>
-                <Button
-                  type="primary"
-                  loading={loading}
-                  htmlType="submit"
-                  onClick = {handleOk}>
-                  ADD
+              <Col span={12}>
+                <Form.Item name="time" label="Time" {...timeConfig}>
+                  <TimePicker format="HH:mm" defaultOpenValue={moment()} onChange={(time, timeString) => { this.setState({ timeValue: timeString }) }} />
+                </Form.Item>
+              </Col>
+              <Col span={24}>
+                <Form.Item label="Account" name="account"
+                  rules={[{ required: true, message: 'Please select your country!' }]}>
+                  <Select
+                    style={{ width: 450 }}
+                    onChange={(value) => { this.setState({ accountValue: value }) }}>
+                    {this.state.accounts.map(account => (
+                      <Option value={account.id} key={account.id}>
+                        {account.name}
+                      </Option>
+                    ))}
+                  </Select>
+                </Form.Item>
+              </Col>
+              <Col span={24}>
+                <Form.Item label="Category" name="category"
+                  rules={[{ required: true, message: 'Please select your country!' }]}>
+                  <Select
+                    style={{ width: 450 }}
+                    onChange={(value) => { this.setState({ categoryValue: value }) }}>
+                    {this.state.categories.map(category => (
+                      <Option value={category.id} key={category.id}>
+                        {category.name}
+                      </Option>
+                    ))}
+                  </Select>
+                </Form.Item>
+              </Col>
+              <Col span={24}>
+                <Form.Item label="Amount" name="amount"
+                  rules={[{ required: true, message: 'Please input your Amount' }]}>
+                  <Input
+                    style={{ width: 450 }} />
+                </Form.Item>
+              </Col>
+              <Col span={24}>
+                <Form.Item label="Description" name="description"
+                  rules={[{ required: true, message: 'Please input your Description' }]}>
+                  <TextArea rows={4}
+                    style={{ width: 450 }} />
+                </Form.Item>
+              </Col>
+              <Col style={{ display: 'flex', justifyContent: 'center' }}>
+                <Form.Item>
+                  <Button
+                    type="primary"
+                    loading={loading}
+                    htmlType="submit">
+                    ADD
                 </Button>
+                </Form.Item>
               </Col>
             </Row>
           </Form>

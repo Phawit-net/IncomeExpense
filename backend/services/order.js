@@ -9,33 +9,13 @@ module.exports = (app, db) => {
             })
     })
 
-    app.get('/order', (req, res) => {
-        db.order.findAll({
-            attributes: ['id','description','amount','account.name'],
-            raw: true,
-            include: [{
-                model: db.account,
-                attributes: ['name'],
-            }]
-            // }, {
-            //     model: db.category,
-            //     attributes: ['name'],
-            //     include: [{
-            //         model: db.type,
-            //         attributes: ['name']
-            //     }]
-            // },{
-            //     model: db.date,
-            // }],
-            // include:[{
-            //     model: db.category,
-            //     attributes: ['name'],
-            //     include:[{
-            //         model: db.type,
-            //         attributes: ['name']
-
-            //     }]
-            // }]
+    app.post('/addOrder', (req, res) => {
+        db.order.create({
+            account_id: req.body.account_id,
+            category_id: req.body.category_id,
+            amount:req.body.amount,
+            description:req.body.description,
+            date_id: req.body.date_id,
         })
             .then(result => {
                 res.status(200).json(result)

@@ -9,6 +9,21 @@ module.exports = (app, db) => {
             })
     })
 
+    app.get('/dateId/:date', (req, res) => {
+        db.date.findAll({
+            where: {
+                published_date: req.params.date
+            },
+            attributes: ['id']
+        })
+            .then(result => {
+                res.status(200).json(result)
+            })
+            .catch(error => {
+                res.status(400).json({ message: error.message })
+            })
+    })
+
     app.get('/date', (req, res) => {
         db.date.findAll({
             attributes: ['published_date'],
@@ -33,6 +48,19 @@ module.exports = (app, db) => {
                     }]
                 }]
             }],
+        })
+            .then(result => {
+                res.status(200).json(result)
+            })
+            .catch(error => {
+                res.status(400).json({ message: error.message })
+            })
+    })
+
+
+    app.post('/addDate', (req, res) => {
+        db.date.create({
+            published_date: req.body.published_date,
         })
             .then(result => {
                 res.status(200).json(result)
