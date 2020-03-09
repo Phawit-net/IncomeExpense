@@ -12,24 +12,6 @@ class Transactions extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      // cardList :[
-      //   {
-      //     id :1,
-      //     date:'06-02-2020',
-      //     description:'ข้าว7',
-      //     type:'expense',
-      //     category:'food',
-      //     account:'cash'
-      //   },
-      //   {
-      //     id :2,
-      //     date:'06-02-2020',
-      //     description:'วินมอไซ',
-      //     type:'expense',
-      //     category:'transport',
-      //     account:'cash'
-      //   }
-      // ]
       loading: false,
       visible: false,
       cardList: []
@@ -46,29 +28,25 @@ class Transactions extends Component {
   }
 
   showModal = (e) => {
-    console.log(this.state);
+    // console.log(this.state);
     this.setState({
       visible: true,
     });
   };
 
   handleOk = e => {
-    console.log(e);
+    // console.log(e);
     this.setState({
       visible: false,
     });
   };
 
   handleCancel = e => {
-    console.log(e);
+    // console.log(e);
     this.setState({
       visible: false,
     });
   };
-
-  handleChange(value) {
-    console.log(value); // { key: "lucy", label: "Lucy (101)" }
-  }
 
   render() {
     return (
