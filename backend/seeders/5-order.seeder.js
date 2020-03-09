@@ -11,6 +11,7 @@ module.exports = {
         account_id:1,
         createdAt: new Date(),
         updatedAt: new Date(),
+        date_id:1,
       },
       {
         id: 2,
@@ -20,6 +21,7 @@ module.exports = {
         account_id:1,
         createdAt: new Date(),
         updatedAt: new Date(),
+        date_id:1,
       },
       {
         id: 3,
@@ -29,6 +31,7 @@ module.exports = {
         account_id:2,
         createdAt: new Date(),
         updatedAt: new Date(),
+        date_id:2,
       },
       {
         id: 4,
@@ -38,6 +41,7 @@ module.exports = {
         account_id:3,
         createdAt: new Date(),
         updatedAt: new Date(),
+        date_id:2,
       }
     ], {});
   },

@@ -2,18 +2,27 @@ import React, { Component } from 'react'
 import { Row, Col, Tag } from 'antd'
 
 export default class RecordCard extends Component {
+  switchType(type,amount) {
+    if (type.name == "Income") {
+      return (<span style={{color:'#1a7bb9'}}>{amount}</span>)
+    } else {
+      return (<span style={{color:'#e25f51'}}>{amount}</span>)
+    }
+  }
+
   renderOrderList(orderList) {
     return orderList.map(order => (
       <Row type='flex' align='middle' style={{ padding: '10px 20px' }}>
         <Col span={6} style={{fontSize: '17px'}}>
-          {order.category}
+          {order.category.name}
         </Col>
         <Col span={12}>
           <div style={{fontSize:'17px'}}>{order.description}</div>
-          <div>{order.account}</div>
+          <div>{order.account.name}</div>
         </Col>
         <Col span={6} style={{ fontSize: '17px',display: 'flex', justifyContent: 'flex-end' }}>
-          {order.price}
+          {/* {order.amount} */}
+          {this.switchType(order.category.type , order.amount)}
         </Col>
       </Row>
     ))
@@ -26,10 +35,10 @@ export default class RecordCard extends Component {
           <Col span={12}>
             <Row type='flex' align='middle'>
               <Col span={7}>
-                <span style={{ fontSize: '50px', padding: '0px' }}> 06 </span>
+                <span style={{ fontSize: '50px', padding: '0px' }}>{card.published_date.split('-')[2]}</span>
               </Col>
               <Col span={17}>
-                <div>{card.date}</div>
+                <div>{card.published_date}</div>
                 <Tag color="#2db7f5">friday</Tag>
               </Col>
             </Row>
@@ -47,7 +56,7 @@ export default class RecordCard extends Component {
   }
 
   render() {
-    const { cardList } = this.props
+    // const { cardList } = this.props
     return (
       <>
         {this.renderCardList()}

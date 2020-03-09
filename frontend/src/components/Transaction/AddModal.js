@@ -1,20 +1,60 @@
 import React, { Component } from 'react'
 import { Row, Button, Modal, Select, Radio, Col, Form, Input, DatePicker, TimePicker } from 'antd'
+import Axios from '../../config/api.service'
+import moment from 'moment';
+
 const dateFormat = 'DD/MM/YYYY';
 const timeFormar = 'HH:mm';
 const { Option } = Select;
 const { TextArea } = Input;
 
 export default class AddModal extends Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      type:'Income',
+      accounts: [],
+      categories: []
+    };
+  }
+
+  componentDidMount() {
+    Axios.get("/accounts")
+      .then(result => {
+        this.setState({
+          accounts: result.data
+        });
+      })
+      Axios.get(`/category/${this.state.type}`)
+      .then(result => {
+        this.setState({
+          categories: result.data
+        });
+      })
+  }
+
+  onSelected=(e)=>{
+    this.setState({
+      type: e.target.value
+    },()=>{
+      Axios.get(`/category/${this.state.type}`)
+      .then(result => {
+        this.setState({
+          categories: result.data
+        });
+      })
+    });
+  }
+
   render() {
     const { handleOk, handleCancel, loading, visible } = this.props;
     return (
       <Modal
         title={[
-          <Radio.Group style={{ display: 'flex', justifyContent: 'center' }} size="large" buttonStyle="solid">
-            <Radio.Button className='inc' style={{ fontSize: "20px" }} value="large">Income</Radio.Button>
-            <Radio.Button className='exp' style={{ fontSize: "20px" }} value="default">Expense</Radio.Button>
-            <Radio.Button className='trn' style={{ fontSize: "20px" }} value="small">Transfer</Radio.Button>
+          <Radio.Group style={{ display: 'flex', justifyContent: 'center' }} size="large" buttonStyle="solid" defaultValue="Income" onChange={this.onSelected}>
+            <Radio.Button className='inc' style={{ fontSize: "20px" }} value="Income">Income</Radio.Button>
+            <Radio.Button className='exp' style={{ fontSize: "20px" }} value="Expense">Expense</Radio.Button>
+            <Radio.Button className='trn' style={{ fontSize: "20px" }} value="Transfer">Transfer</Radio.Button>
           </Radio.Group>
         ]}
         visible={visible}
@@ -58,12 +98,14 @@ export default class AddModal extends Component {
                     })(<Input />)} */}
                   <Select
                     labelInValue
-                    defaultValue={{ key: 'lucy' }}
+                    // defaultValue={{ key: 'lucy' }}
                     style={{ width: 120 }}
-                    onChange={this.handleChange}
-                  >
-                    <Option value="jack">Jack (100)</Option>
-                    <Option value="lucy">Lucy (101)</Option>
+                    onChange={this.handleChange}>
+                    {this.state.accounts.map(account => (
+                      <Option value={account.id} key={account.id}>
+                        {account.name}
+                      </Option>
+                    ))}
                   </Select>
                 </Form.Item>
               </Col>
@@ -83,12 +125,14 @@ export default class AddModal extends Component {
                     })(<Input />)} */}
                   <Select
                     labelInValue
-                    defaultValue={{ key: 'lucy' }}
+                    // defaultValue={{ key: 'lucy' }}
                     style={{ width: 120 }}
-                    onChange={this.handleChange}
-                  >
-                    <Option value="jack">Jack (100)</Option>
-                    <Option value="lucy">Lucy (101)</Option>
+                    onChange={this.handleChange}>
+                     {this.state.categories.map(category => (
+                      <Option value={category.id} key={category.id}>
+                        {category.name}
+                      </Option>
+                    ))}
                   </Select>
                 </Form.Item>
               </Col>

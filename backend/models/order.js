@@ -8,7 +8,9 @@ module.exports = (sequelize, DataTypes) => {
         }
     })
     order.associate = function (models) {
-        order.hasMany(models.date, { foreignKey: 'order_id' })
+        order.belongsTo(models.account, { foreignKey: 'account_id'})
+        order.belongsTo(models.category, { foreignKey: 'category_id'})
+        order.belongsTo(models.date, { foreignKey: 'date_id'})
     };
     return order
 }

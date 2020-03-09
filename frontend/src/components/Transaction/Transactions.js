@@ -6,6 +6,7 @@ import AddModal from './AddModal';
 import { addNote } from '../../redux/actions/actions';
 import {connect} from 'react-redux'
 import store from '../../redux/store/store'
+import Axios from '../../config/api.service'
 
 class Transactions extends Component {
   constructor(props) {
@@ -31,17 +32,18 @@ class Transactions extends Component {
       // ]
       loading: false,
       visible: false,
-      cardList: [
-        {
-          date: '06-02-2020',
-          orders: [
-            { id: 1, description: 'ข้าว7', type: 'expense', category: 'food', account: 'cash', price: '78' },
-            { id: 2, description: 'วินมอไซ', type: 'expense', category: 'transport', account: 'cash', price: '25' }
-          ]
-        }
-      ]
+      cardList: []
     }
   };
+
+  componentDidMount() {
+    Axios.get("/date")
+    .then(result => {
+      this.setState({
+        cardList : result.data
+      });
+    })
+  }
 
   showModal = (e) => {
     console.log(this.state);
