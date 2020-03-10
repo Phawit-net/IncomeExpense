@@ -24,6 +24,24 @@ module.exports = (app, db) => {
             })
     })
 
+    app.get('/dateEmpty/:empty', (req, res) => {
+        db.date.findAll({
+            where: {
+                id: req.params.empty
+            },
+            attributes: ['published_date','id'],
+            include: [{
+                model: db.order
+            }],
+        })
+            .then(result => {
+                res.status(200).json(result)
+            })
+            .catch(error => {
+                res.status(400).json({ message: error.message })
+            })
+    })
+
     app.get('/date', (req, res) => {
         db.date.findAll({
             attributes: ['published_date','id'],
@@ -57,10 +75,21 @@ module.exports = (app, db) => {
             })
     })
 
-
     app.post('/addDate', (req, res) => {
         db.date.create({
             published_date: req.body.published_date,
+        })
+            .then(result => {
+                res.status(200).json(result)
+            })
+            .catch(error => {
+                res.status(400).json({ message: error.message })
+            })
+    })
+
+    app.delete('/deleteDate/:id', (req, res) => {
+        db.date.destroy({
+            where: { id: req.params.id }
         })
             .then(result => {
                 res.status(200).json(result)

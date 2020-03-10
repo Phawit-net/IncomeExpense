@@ -56,11 +56,14 @@ class Transactions extends Component {
             <Button onClick={this.showModal}> + </Button>
           </div>
         </div>
-        <Row type='flex' justify='center' style={{ backgroundColor: 'f0f4f5',display:'flex' , justifyContent:'center' }}>
+        <Row type='flex' justify='center' style={{ backgroundColor: 'f0f4f5', display: 'flex', justifyContent: 'center' }}>
           <Col >
-            <RecordCard
-              cardList={this.state.cardList}
-            />
+            {this.state.cardList.map((card) => (
+              <RecordCard
+                key={card.id}
+                card={card}
+              />
+            ))}
           </Col>
         </Row>
         <AddModal
