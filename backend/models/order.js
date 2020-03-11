@@ -5,6 +5,9 @@ module.exports = (sequelize, DataTypes) => {
         },
         amount: {
             type: DataTypes.DECIMAL
+        },
+        published_time:{
+            type: DataTypes.TIME,
         }
     })
     order.associate = function (models) {

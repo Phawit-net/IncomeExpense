@@ -1,35 +1,69 @@
 import React, { Component } from 'react'
 import { Row, Col, Tag, Button, Card } from 'antd'
-import { DeleteOutlined } from '@ant-design/icons';
+import { DeleteOutlined, EditOutlined } from '@ant-design/icons';
 import "./RecordCard.css";
 import Axios from '../../config/api.service'
 import moment from 'moment';
+import EditModal from './EditModal';
 
 export default class RecordCard extends Component {
   constructor(props) {
     super(props);
     this.state = {
       emptyOrder: [],
+      visible: false,
+      orderId: '',
+      dateId: '',
+      orderSelectEdit: []
     }
   };
 
-  totalIncome(orders){
+  handleEdit = (orderId, dateId) => () => {
+    console.log(orderId)
+    console.log(dateId)
+    Axios.get(`/editDate/${dateId}/${orderId}`)
+      .then(result => {
+        this.setState({
+          orderSelectEdit: result.data,
+        });
+      }).then(result => {
+        this.setState({
+          visible: true,
+          orderId: orderId,
+          dateId: dateId
+        })
+      })
+  };
+
+  handleOk = e => {
+    this.setState({
+      visible: false,
+    });
+  };
+
+  handleCancel = e => {
+    this.setState({
+      visible: false,
+    });
+  };
+
+  totalIncome(orders) {
     let totalIncome = 0
-    orders.map(order=>{
-      if (order.category.type.name == 'Income'){
+    orders.map(order => {
+      if (order.category.type.name == 'Income') {
         totalIncome += parseInt(order.amount)
-      } 
+      }
     })
-    return(<span style={{fontSize:'20px',color: '#1a7bb9'}}>&#3647; {totalIncome}</span>)
+    return (<span style={{ fontSize: '20px', color: '#1a7bb9' }}>&#3647; {totalIncome}</span>)
   }
-  totalExpense(orders){
+  totalExpense(orders) {
     let totalExpense = 0
-    orders.map(order=>{
-      if (order.category.type.name == 'Expense'){
+    orders.map(order => {
+      if (order.category.type.name == 'Expense') {
         totalExpense += parseInt(order.amount)
       }
     })
-    return(<span style={{fontSize:'20px',color: '#e25f51'}}>&#3647; {totalExpense}</span>)
+    return (<span style={{ fontSize: '20px', color: '#e25f51' }}>&#3647; {totalExpense}</span>)
   }
 
   switchColor(day) {
@@ -57,7 +91,7 @@ export default class RecordCard extends Component {
       return (<span style={{ color: '#e25f51' }}>&#3647; {amount}</span>)
     }
   }
- 
+
   handleDelete = (orderId, dateId) => () => {
     console.log(orderId)
     console.log(dateId)
@@ -76,7 +110,7 @@ export default class RecordCard extends Component {
                 })
               window.location.reload(true);
             }
-            else{
+            else {
               window.location.reload(true);
             }
           })
@@ -87,8 +121,8 @@ export default class RecordCard extends Component {
       .catch(err => {
         console.error(err)
       })
-    // 
   }
+
 
   renderOrderList(orderList) {
     return orderList.map(order => (
@@ -96,12 +130,15 @@ export default class RecordCard extends Component {
         <Col span={6} style={{ fontSize: '17px' }}>
           {order.category.name}
         </Col>
-        <Col span={10}>
+        <Col span={8}>
           <div style={{ fontSize: '17px' }}>{order.description}</div>
           <div>{order.account.name}</div>
         </Col>
         <Col span={6} style={{ fontSize: '17px', display: 'flex', justifyContent: 'flex-end' }}>
           {this.switchType(order.category.type, order.amount)}
+        </Col>
+        <Col span={2} style={{ fontSize: '17px', display: 'flex', justifyContent: 'flex-end' }}>
+          <span><EditOutlined className='editBtn' onClick={this.handleEdit(order.id, this.props.card.id)} /></span>
         </Col>
         <Col span={2} style={{ fontSize: '17px', display: 'flex', justifyContent: 'flex-end' }}>
           <span><DeleteOutlined className='deleteBtn' onClick={this.handleDelete(order.id, this.props.card.id)} /></span>
@@ -131,9 +168,17 @@ export default class RecordCard extends Component {
           </Col>
           <Col span={6} style={{ display: 'flex', justifyContent: 'flex-end', fontSize: '17px' }}>
             {this.totalExpense(card.orders)}
-            </Col>
+          </Col>
         </Row>
         {this.renderOrderList(card.orders)}
+        <EditModal
+          selectOrderId={this.state.orderId}
+          selectDateId={this.state.dateId}
+          orderSelectEdit={this.state.orderSelectEdit}
+          handleOk={this.handleOk}
+          handleCancel={this.handleCancel}
+          visible={this.state.visible}
+        />
       </div>
     )
   }

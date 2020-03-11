@@ -12,6 +12,8 @@ module.exports = {
         createdAt: new Date(),
         updatedAt: new Date(),
         date_id:1,
+        published_time:'13:00',
+        user_id: 1
       },
       {
         id: 2,
@@ -22,6 +24,8 @@ module.exports = {
         createdAt: new Date(),
         updatedAt: new Date(),
         date_id:1,
+        published_time:'13:00',
+        user_id: 1
       },
       {
         id: 3,
@@ -32,6 +36,8 @@ module.exports = {
         createdAt: new Date(),
         updatedAt: new Date(),
         date_id:2,
+        published_time:'13:00',
+        user_id: 1
       },
       {
         id: 4,
@@ -42,6 +48,8 @@ module.exports = {
         createdAt: new Date(),
         updatedAt: new Date(),
         date_id:2,
+        published_time:'13:00',
+        user_id: 1
       }
     ], {});
   },

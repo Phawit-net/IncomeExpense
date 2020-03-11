@@ -9,6 +9,7 @@ const categoryService = require('./services/category')
 const accountService = require('./services/account')
 const typeService = require('./services/type')
 const dateService = require('./services/date')
+const userService = require('./services/user')
 const orderService = require('./services/order')
 app.use(cors())
 
@@ -21,6 +22,7 @@ db.sequelize.sync({ alter: false }).then(() => {
     accountService(app, db)
     typeService(app, db)
     dateService(app,db)
+    userService(app,db)
     orderService(app,db)
 
   app.listen(8080, () => {

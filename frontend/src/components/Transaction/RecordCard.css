@@ -2,7 +2,9 @@
     display: none;
     color:#e25f51;
 }
-
-.block:hover .deleteBtn{
+.editBtn{
+    display: none;
+}
+.block:hover .deleteBtn ,.block:hover .editBtn{
     display: block;
 }

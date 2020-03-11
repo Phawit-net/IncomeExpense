@@ -4,15 +4,8 @@ import Axios from '../../config/api.service'
 import moment from 'moment';
 
 const { Option } = Select;
-const { TextArea } = Input;
-const dateConfig = {
-  rules: [{ type: 'object', required: true, message: 'Please select Date!' }],
-};
-const timeConfig = {
-  rules: [{ type: 'object', required: true, message: 'Please select Date!' }],
-};
 
-export default class AddModal extends Component {
+export default class EditModal extends Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -23,11 +16,29 @@ export default class AddModal extends Component {
       timeValue: '',
       accountValue: '',
       categoryValue: '',
-      dateId: ''
+      dateId: '',
     };
   }
 
+  // componentDidMount() {
+  //   Axios.get(`/editDate/${this.props.selectDateId}/${this.props.selectOrderId}`)
+  //     .then(result => {
+  //       this.setState({
+  //         orderEdit: result.data
+  //       });
+  //     })
+  //   // Axios.get(`/category/${this.state.type}`)
+  //   //   .then(result => {
+  //   //     this.setState({
+  //   //       categories: result.data
+  //   //     });
+  //   //   })
+  //     .then(() => {
+  //       console.log(this.state)
+  //     })
+  // }
   componentDidMount() {
+    console.log(this.state)
     Axios.get("/accounts")
       .then(result => {
         this.setState({
@@ -56,75 +67,46 @@ export default class AddModal extends Component {
   }
 
   onFinish = (values) => {
-    Axios.post("/addDate", {
-      published_date: this.state.dateValue
-    })
+    console.log(values.editCategory)
+    // console.log(moment(this.props.orderSelectEdit.map(orders => orders.published_date)).format())
+    Axios.get(`/dateId/${this.props.orderSelectEdit.map(orders => orders.published_date)[0].split('-').reverse().join('-')}`)
       .then(result => {
-        Axios.get(`/dateId/${this.state.dateValue}`)
+        this.setState({
+          dateId: result.data
+        });
+      })
+      .then(date_result => {
+        console.log("STEP2", this.state)
+        Axios.put(`/changeOrder/${this.props.orderSelectEdit.map(orders => orders.orders.map(select => select.id)[0])[0]}`, {
+          account_id: values.editAccount,
+          category_id: values.editCategory,
+          amount: values.editAmount,
+          description: values.editDescription,
+          date_id: this.state.dateId[0].id,
+        })
           .then(result => {
-            this.setState({
-              dateId: result.data
-            });
-          })
-          .then(date_result => {
-            console.log(this.state)
-            Axios.post("/addOrder", {
-              account_id: this.state.accountValue,
-              category_id: this.state.categoryValue,
-              amount: values.amount,
-              description: values.description,
-              date_id: this.state.dateId[0].id,
-            })
-              .then(result => {
-                console.log(result)
-              })
-              .catch(err => {
-                console.error(err)
-              })
+            window.location.reload(true);
           })
           .catch(err => {
             console.error(err)
           })
       })
       .catch(err => {
-        Axios.get(`/dateId/${this.state.dateValue}`)
-          .then(result => {
-            this.setState({
-              dateId: result.data
-            });
-          })
-          .then(date_result => {
-            console.log(this.state)
-            Axios.post("/addOrder", {
-              account_id: this.state.accountValue,
-              category_id: this.state.categoryValue,
-              amount: values.amount,
-              description: values.description,
-              date_id: this.state.dateId[0].id,
-            })
-              .then(result => {
-                console.log(result)
-              })
-              .catch(err => {
-                console.error(err)
-              })
-          })
-          .catch(err => {
-            console.error(err)
-          })
+        console.error(err)
       })
-    this.formRef.current.resetFields();
-    window.location.reload(true);
   }
+
 
   formRef = React.createRef();
   render() {
-    const { handleOk, handleCancel, loading, visible } = this.props;
+    const { handleOk, handleCancel, loading, visible, selectOrderId, selectDateId, orderSelectEdit } = this.props;
     return (
       <Modal
         destroyOnClose={true}
         title={[
-          <Radio.Group style={{ display: 'flex', justifyContent: 'center' }} size="large" buttonStyle="solid" defaultValue="Income" onChange={this.onSelected}>
+          <Radio.Group name='type' style={{ display: 'flex', justifyContent: 'center' }} size="large" buttonStyle="solid" 
+            defaultValue={this.props.orderSelectEdit.map(orders => orders.orders.map(select => select.category.type.name)[0])[0]} 
+            onChange={this.onSelected}>
             <Radio.Button className='inc' style={{ fontSize: "20px" }} value="Income">Income</Radio.Button>
             <Radio.Button className='exp' style={{ fontSize: "20px" }} value="Expense">Expense</Radio.Button>
             <Radio.Button className='trn' style={{ fontSize: "20px" }} value="Transfer">Transfer</Radio.Button>
@@ -139,19 +121,24 @@ export default class AddModal extends Component {
           <Form onFinish={this.onFinish} ref={this.formRef}>
             <Row style={{ width: 450 }}>
               <Col span={12}>
-                <Form.Item name="date" label="Date" {...dateConfig}>
-                  <DatePicker format='YYYY-MM-DD' defaultOpenValue={moment()} onChange={(date, dateString) => { this.setState({ dateValue: dateString }) }} />
+                <Form.Item name="editDate" label="Date" >
+                  <DatePicker
+                    disabled
+                    defaultValue={moment(orderSelectEdit.map(orders => orders.published_date), 'DD-MM-YYYY')}
+                    value={moment(orderSelectEdit.map(orders => orders.published_date), 'DD-MM-YYYY')}
+                    onChange={(date, dateString) => { this.setState({ dateValue: dateString }) }} />
                 </Form.Item>
               </Col>
               <Col span={12}>
-                <Form.Item name="time" label="Time" {...timeConfig}>
-                  <TimePicker format="HH:mm" defaultOpenValue={moment()} onChange={(time, timeString) => { this.setState({ timeValue: timeString }) }} />
+                <Form.Item name="editTime" label="Time" >
+                  <TimePicker disabled defaultValue={moment(orderSelectEdit.map(orders => orders.orders.map(select => select.published_time)), "HH:mm")} onChange={(time, timeString) => { this.setState({ timeValue: timeString }) }} />
                 </Form.Item>
               </Col>
               <Col span={24}>
-                <Form.Item label="Account" name="account"
-                  rules={[{ required: true, message: 'Please select your country!' }]}>
+                <Form.Item label="Account" name="editAccount">
                   <Select
+                    defaultValue={orderSelectEdit.map(orders => orders.orders.map(select => select.account.name))}
+                    value={orderSelectEdit.map(orders => orders.orders.map(select => select.account.name))}
                     style={{ width: 450 }}
                     onChange={(value) => { this.setState({ accountValue: value }) }}>
                     {this.state.accounts.map(account => (
@@ -163,9 +150,10 @@ export default class AddModal extends Component {
                 </Form.Item>
               </Col>
               <Col span={24}>
-                <Form.Item label="Category" name="category"
-                  rules={[{ required: true, message: 'Please select your country!' }]}>
+                <Form.Item label="Category" name="editCategory">
                   <Select
+                    defaultValue={orderSelectEdit.map(orders => orders.orders.map(select => select.category.name))}
+                    value={orderSelectEdit.map(orders => orders.orders.map(select => select.category.name))}
                     style={{ width: 450 }}
                     onChange={(value) => { this.setState({ categoryValue: value }) }}>
                     {this.state.categories.map(category => (
@@ -177,16 +165,16 @@ export default class AddModal extends Component {
                 </Form.Item>
               </Col>
               <Col span={24}>
-                <Form.Item label="Amount" name="amount"
-                  rules={[{ required: true, message: 'Please input your Amount' }]}>
+                <Form.Item label="Amount" name="editAmount">
                   <Input
+                    defaultValue={orderSelectEdit.map(orders => orders.orders.map(select => select.amount))}
                     style={{ width: 450 }} />
                 </Form.Item>
               </Col>
               <Col span={24}>
-                <Form.Item label="Description" name="description"
-                  rules={[{ required: true, message: 'Please input your Description' }]}>
-                  <TextArea rows={4}
+                <Form.Item label="Description" name="editDescription">
+                  <Input rows={4}
+                    defaultValue={orderSelectEdit.map(orders => orders.orders.map(select => select.description))}
                     style={{ width: 450 }} />
                 </Form.Item>
               </Col>
@@ -197,7 +185,7 @@ export default class AddModal extends Component {
                     loading={loading}
                     htmlType="submit"
                     onClick={handleOk}>
-                    ADD
+                    SAVE
                 </Button>
                 </Form.Item>
               </Col>
