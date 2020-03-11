@@ -12,16 +12,6 @@ module.exports = (app, db) => {
             })
     })
 
-    // app.get('/datestoken',passport.authenticate("jwt", { session: false }) , (req, res) => {
-    //     db.date.findAll({ where: { id: req.user.id } })
-    //         .then(result => {
-    //             res.status(200).json(result)
-    //         })
-    //         .catch(error => {
-    //             res.status(400).json({ message: error.message })
-    //         })
-    // })
-
     app.get('/date',passport.authenticate("jwt", { session: false }) , (req, res) => {
         db.date.findAll({
             where: { user_id: req.user.id },
@@ -90,38 +80,7 @@ module.exports = (app, db) => {
             })
     })
 
-    // app.get('/date', (req, res) => {
-    //     db.date.findAll({
-    //         attributes: ['published_date','id','user_id'],
-    //         order: [['published_date', 'DESC']],
-    //         include: [{
-    //             model: db.order,
-    //             include: [{
-    //                 model: db.account,
-    //                 required: true,
-    //                 raw: true,
-    //                 attributes: ['name'],
-    //             }, {
-    //                 model: db.category,
-    //                 required: true,
-    //                 raw: true,
-    //                 attributes: ['name'],
-    //                 include: [{
-    //                     model: db.type,
-    //                     required: true,
-    //                     raw: true,
-    //                     attributes: ['name']
-    //                 }]
-    //             }]
-    //         }],
-    //     })
-    //         .then(result => {
-    //             res.status(200).json(result)
-    //         })
-    //         .catch(error => {
-    //             res.status(400).json({ message: error.message })
-    //         })
-    // })
+   
 
     app.post('/addDate',passport.authenticate("jwt", { session: false }) , (req, res) => {
         db.date.create({

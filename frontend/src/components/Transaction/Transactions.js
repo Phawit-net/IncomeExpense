@@ -48,8 +48,6 @@ class Transactions extends Component {
   };
 
   handleChange = (month, monthString) => {
-    console.log(this.state)
-    console.log(monthString)
     let covert = moment(monthString).format("MM-YYYY")
     this.setState({ monthValue: covert })
   }

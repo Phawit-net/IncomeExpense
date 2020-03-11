@@ -1,5 +1,5 @@
 import React from 'react'
-import { Row, Form, Icon, Input, Col, Button } from 'antd'
+import { Row, Form, Input, Col, Button } from 'antd'
 import logo from '../images/logo.png'
 import Axios from '../config/api.service'
 

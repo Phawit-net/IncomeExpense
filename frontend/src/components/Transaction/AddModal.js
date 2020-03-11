@@ -56,7 +56,6 @@ export default class AddModal extends Component {
   }
 
   onFinish = (values) => {
-    console.log(this.state.timeValue)
     Axios.get(`/dateId/${this.state.dateValue}`)
       .then(result => {
         if (result.data[0] != undefined) {
@@ -116,8 +115,8 @@ export default class AddModal extends Component {
       .catch(err => {
         console.error(err)
       })
-    // this.formRef.current.resetFields();
-    // window.location.reload(true);
+    this.formRef.current.resetFields();
+    window.location.reload(true);
   }
 
   formRef = React.createRef();
