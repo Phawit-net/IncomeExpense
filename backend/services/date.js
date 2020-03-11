@@ -56,9 +56,10 @@ module.exports = (app, db) => {
             })
     })
 
-    app.get('/dateId/:date', (req, res) => {
+    app.get('/dateId/:date',passport.authenticate("jwt", { session: false }) , (req, res) => {
         db.date.findAll({
             where: {
+                user_id: req.user.id,
                 published_date: req.params.date
             },
             attributes: ['id']

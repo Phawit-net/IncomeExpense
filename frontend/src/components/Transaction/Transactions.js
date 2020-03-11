@@ -1,12 +1,11 @@
 import React, { Component } from 'react'
 import RecordCard from './RecordCard'
-import { Row, Button, Col } from 'antd'
+import { Row, Button, Col, DatePicker } from 'antd'
 import "./Transaction.css";
 import AddModal from './AddModal';
-import { addNote } from '../../redux/actions/actions';
-import { connect } from 'react-redux'
-import store from '../../redux/store/store'
+import moment from 'moment';
 import Axios from '../../config/api.service'
+const monthFormat = 'YYYY MMMM';
 
 class Transactions extends Component {
   constructor(props) {
@@ -14,7 +13,8 @@ class Transactions extends Component {
     this.state = {
       loading: false,
       visible: false,
-      cardList: []
+      cardList: [],
+      monthValue: moment().format("MM-YYYY")
     }
   };
 
@@ -28,25 +28,29 @@ class Transactions extends Component {
   }
 
   showModal = (e) => {
-    // console.log(this.state);
     this.setState({
       visible: true,
     });
   };
 
   handleOk = e => {
-    // console.log(e);
     this.setState({
       visible: false,
     });
   };
 
   handleCancel = e => {
-    // console.log(e);
     this.setState({
       visible: false,
     });
   };
+
+  handleChange = (month, monthString) => {
+    console.log(this.state)
+    console.log(monthString)
+    let covert = moment(monthString).format("MM-YYYY")
+    this.setState({ monthValue: covert })
+  }
 
   render() {
     return (
@@ -56,14 +60,20 @@ class Transactions extends Component {
             <Button onClick={this.showModal}> + </Button>
           </div>
         </div>
+        <Row type='flex' justify='center' style={{ backgroundColor: 'f0f4f5', display: 'flex', justifyContent: 'center', padding: '20px' }}>
+          <DatePicker defaultValue={moment()} format={monthFormat} picker="month" size='large'
+            onChange={this.handleChange} />
+        </Row>
         <Row type='flex' justify='center' style={{ backgroundColor: 'f0f4f5', display: 'flex', justifyContent: 'center' }}>
           <Col >
-            {this.state.cardList.map((card) => (
-              <RecordCard
-                key={card.id}
-                card={card}
-              />
-            ))}
+            {this.state.cardList.map((card) => {
+              if (card.published_date.split("-").slice(1,3).join('-') === this.state.monthValue){
+                return (  <RecordCard
+                  key={card.id}
+                  card={card}
+                />)
+              }
+            })}
           </Col>
         </Row>
         <AddModal
@@ -75,9 +85,5 @@ class Transactions extends Component {
     )
   }
 }
-
-// const mapDispatchToProps = {
-//   addNewNote: addNote
-// }
 
 export default Transactions
