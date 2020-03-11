@@ -76,8 +76,8 @@ class Transactions extends Component {
   }
 }
 
-const mapDispatchToProps = {
-  addNewNote: addNote
-}
+// const mapDispatchToProps = {
+//   addNewNote: addNote
+// }
 
-export default connect(null, mapDispatchToProps)(Transactions)
+export default Transactions

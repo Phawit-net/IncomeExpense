@@ -1,15 +1,34 @@
-export const ADD_NOTE = 'ADD_NOTE'
+import { TOKEN } from '../../config/constants'
 
-export function addNote(date, description, type, category, account, price) {
+export const LOGIN_USER = 'LOGIN_USER'
+export const LOGOUT_USER = 'LOGOUT_USER'
+
+export function logoutUser() {
+  localStorage.removeItem("ACCESS_TOKEN")
   return {
-    id: new Date().getTime().toString(),
-    type: ADD_NOTE,
-    date: date,
-    description: description,
-    type: type,
-    category: category,
-    account: account,
-    price: price
-    // status: STATUS_ACTIVE  
+    type: LOGOUT_USER,
+  }
+}
+
+function fetchLogin(token) {
+  localStorage.setItem(TOKEN, token)
+}
+
+export function login(user, token) {
+  fetchLogin(token)
+  return {
+    type: LOGIN_USER,
+    ...user
+  }
+}
+
+function fetchLogout() {
+  localStorage.removeItem(TOKEN)
+}
+
+export function logout() {
+  fetchLogout()
+  return {
+    type: LOGOUT_USER,
   }
 }
