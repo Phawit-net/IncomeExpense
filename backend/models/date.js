@@ -6,7 +6,7 @@ module.exports = (sequelize, DataTypes) => {
             get: function() {
                 return moment(this.getDataValue('published_date')).format('DD-MM-YYYY')
              },
-            unique: true
+            // unique: true
         },
     })
     date.associate = function (models) {

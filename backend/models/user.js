@@ -17,7 +17,7 @@ module.exports = (sequelize,DataType)=>{
         }
     })
     user.associate =(models) =>{
-        user.hasMany(models.order,{foreignKey : 'user_id'})
+        user.hasMany(models.date,{foreignKey : 'user_id'})
     }
 
     return user 
