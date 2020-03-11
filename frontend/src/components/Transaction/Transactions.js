@@ -1,10 +1,12 @@
 import React, { Component } from 'react'
 import RecordCard from './RecordCard'
-import { Row, Button, Col, DatePicker } from 'antd'
+import { Row, Col, DatePicker } from 'antd'
+import { PlusCircleOutlined } from '@ant-design/icons';
 import "./Transaction.css";
 import AddModal from './AddModal';
 import moment from 'moment';
 import Axios from '../../config/api.service'
+import TotalCard from './TotalCard';
 const monthFormat = 'YYYY MMMM';
 
 class Transactions extends Component {
@@ -55,14 +57,14 @@ class Transactions extends Component {
   render() {
     return (
       <>
-        <div style={{ position: 'absolute', right: '0', bottom: '0' }}>
-          <div style={{ borderRadius: '50%', backgroundColor: 'red', width: '100px', height: '100px', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
-            <Button onClick={this.showModal}> + </Button>
-          </div>
-        </div>
         <Row type='flex' justify='center' style={{ backgroundColor: 'f0f4f5', display: 'flex', justifyContent: 'center', padding: '20px' }}>
           <DatePicker defaultValue={moment()} format={monthFormat} picker="month" size='large'
             onChange={this.handleChange} />
+        </Row>
+        <Row type='flex' justify='center' style={{ backgroundColor: 'f0f4f5', display: 'flex', justifyContent: 'center', paddingBottom: '20px' }}>
+          <TotalCard
+          cardList = {this.state.cardList}
+          monthValue={this.state.monthValue}/>
         </Row>
         <Row type='flex' justify='center' style={{ backgroundColor: 'f0f4f5', display: 'flex', justifyContent: 'center' }}>
           <Col >
@@ -81,6 +83,11 @@ class Transactions extends Component {
           handleCancel={this.handleCancel}
           visible={this.state.visible}
         />
+        <div style={{ position: 'fixed', right: '0', bottom: '0',zIndex:'100' }}>
+          <div style={{ borderRadius: '50%', width: '100px', height: '100px', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+            <span><PlusCircleOutlined style={{fontSize:'60px'}} onClick={this.showModal} /></span>
+          </div>
+        </div>
       </>
     )
   }

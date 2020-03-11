@@ -20,25 +20,7 @@ export default class EditModal extends Component {
     };
   }
 
-  // componentDidMount() {
-  //   Axios.get(`/editDate/${this.props.selectDateId}/${this.props.selectOrderId}`)
-  //     .then(result => {
-  //       this.setState({
-  //         orderEdit: result.data
-  //       });
-  //     })
-  //   // Axios.get(`/category/${this.state.type}`)
-  //   //   .then(result => {
-  //   //     this.setState({
-  //   //       categories: result.data
-  //   //     });
-  //   //   })
-  //     .then(() => {
-  //       console.log(this.state)
-  //     })
-  // }
   componentDidMount() {
-    console.log(this.state)
     Axios.get("/accounts")
       .then(result => {
         this.setState({
@@ -67,8 +49,6 @@ export default class EditModal extends Component {
   }
 
   onFinish = (values) => {
-    console.log(values.editCategory)
-    // console.log(moment(this.props.orderSelectEdit.map(orders => orders.published_date)).format())
     Axios.get(`/dateId/${this.props.orderSelectEdit.map(orders => orders.published_date)[0].split('-').reverse().join('-')}`)
       .then(result => {
         this.setState({

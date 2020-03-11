@@ -15,6 +15,7 @@ module.exports = (app, db) => {
       category_id: req.body.category_id,
       amount: req.body.amount,
       description: req.body.description,
+      published_time:req.body.published_time,
       date_id: req.body.date_id,
     })
       .then(result => {

@@ -31,19 +31,23 @@ class LoginPage extends React.Component {
     return (
       <div>
         <Row type="flex" justify="center" align="middle" style={{ height: '100vh' }}>
-          <Col md={8} sm={12} xs={24}>
-            <img src={logo} alt="Logo Fakebook" style={{ width: '100%', paddingLeft: '24px', paddingRight: '24px', maxWidth: '400px' }}></img>
+          <Col>
+            <img src={logo} alt="Logo" style={{ width: '100%', paddingLeft: '24px', paddingRight: '24px', maxWidth: '400px' }}></img>
           </Col>
-          <Col md={8} sm={12} xs={24}>
-            <Form onFinish={this.handleSubmit} ref={this.formRef} style={{ maxWidth: '400px', width: '100%' }}>
-              <Form.Item label="Username" name="username"
-                rules={[{ required: true, message: 'Please input your username' }]}>
-                <Input />
-              </Form.Item>
-              <Form.Item label="Password" name="password"
-                rules={[{ required: true, message: 'Please input your password' }]}>
-                <Input />
-              </Form.Item>
+          <Col >
+            <Form onFinish={this.handleSubmit} ref={this.formRef} style={{ width: '100%' }}>
+              <Col span={24}>
+                <Form.Item label="Username" name="username"
+                  rules={[{ required: true, message: 'Please input your username' }]}>
+                  <Input />
+                </Form.Item>
+              </Col>
+              <Col span={24}>
+                <Form.Item label="Password" name="password"
+                  rules={[{ required: true, message: 'Please input your password' }]}>
+                  <Input />
+                </Form.Item>
+              </Col>
               <Row>
                 <Col span={12}>
                   <Form.Item>

@@ -55,70 +55,8 @@ export default class AddModal extends Component {
     });
   }
 
-  // onFinish = (values) => {
-  //   Axios.post("/addDate", {
-  //     published_date: this.state.dateValue
-  //   })
-  //     .then(result => {
-  //       Axios.get(`/dateId/${this.state.dateValue}`)
-  //         .then(result => {
-  //           this.setState({
-  //             dateId: result.data
-  //           });
-  //         })
-  //         .then(date_result => {
-  //           console.log(this.state)
-  //           Axios.post("/addOrder", {
-  //             account_id: this.state.accountValue,
-  //             category_id: this.state.categoryValue,
-  //             amount: values.amount,
-  //             description: values.description,
-  //             date_id: this.state.dateId[0].id,
-  //           })
-  //             .then(result => {
-  //               console.log(result)
-  //             })
-  //             .catch(err => {
-  //               console.error(err)
-  //             })
-  //         })
-  //         .catch(err => {
-  //           console.error(err)
-  //         })
-  //     })
-  //     .catch(err => {
-  //       Axios.get(`/dateId/${this.state.dateValue}`)
-  //         .then(result => {
-  //           this.setState({
-  //             dateId: result.data
-  //           });
-  //         })
-  //         .then(date_result => {
-  //           console.log(this.state)
-  //           Axios.post("/addOrder", {
-  //             account_id: this.state.accountValue,
-  //             category_id: this.state.categoryValue,
-  //             amount: values.amount,
-  //             description: values.description,
-  //             date_id: this.state.dateId[0].id,
-  //           })
-  //             .then(result => {
-  //               console.log(result)
-  //             })
-  //             .catch(err => {
-  //               console.error(err)
-  //             })
-  //         })
-  //         .catch(err => {
-  //           console.error(err)
-  //         })
-  //     })
-  //   this.formRef.current.resetFields();
-  //   window.location.reload(true);
-  // }
-
   onFinish = (values) => {
-    console.log('press')
+    console.log(this.state.timeValue)
     Axios.get(`/dateId/${this.state.dateValue}`)
       .then(result => {
         if (result.data[0] != undefined) {
@@ -144,6 +82,7 @@ export default class AddModal extends Component {
                     category_id: this.state.categoryValue,
                     amount: values.amount,
                     description: values.description,
+                    published_time: this.state.timeValue,
                     date_id: this.state.dateId[0].id,
                   })
                     .then(result => {
@@ -177,8 +116,8 @@ export default class AddModal extends Component {
       .catch(err => {
         console.error(err)
       })
-    this.formRef.current.resetFields();
-    window.location.reload(true);
+    // this.formRef.current.resetFields();
+    // window.location.reload(true);
   }
 
   formRef = React.createRef();

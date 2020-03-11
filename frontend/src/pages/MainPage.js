@@ -2,10 +2,10 @@ import React, { Component } from 'react'
 import { Row, Col, Menu, Layout, Avatar ,Button } from 'antd';
 import { UnorderedListOutlined, CreditCardOutlined, PieChartOutlined, UserOutlined, LogoutOutlined } from '@ant-design/icons';
 import Transactions from '../components/Transaction/Transactions';
-import Tpage from '../components/Tpage';
 import { withRouter } from 'react-router-dom';
 import { connect } from 'react-redux'
 import { logout } from '../redux/actions/actions'
+import "./MainPage.css";
 const { Content, Sider } = Layout;
 
 class MainPage extends Component {
@@ -20,8 +20,6 @@ class MainPage extends Component {
     switch (this.state.selectCategory) {
       case '1':
         return <Transactions />
-      case '2':
-        return <Tpage />
       default:
         return
     }
@@ -42,19 +40,21 @@ class MainPage extends Component {
   render() {
     let user = this.props.user
     return (
-      <Layout>
+      <>
+      <div style={{background: 'linear-gradient(45deg, rgba(251,103,124,1) 0%, rgba(253,213,68,1) 100%)',width:'100%',height:'50px',zIndex:'10'}}></div>
+      <Layout>  
         <Sider breakpoint="lg" collapsedWidth="0" width={350} style={{ backgroundColor: 'fff' }}>
-          <Menu onSelect={(e) => this.handleSelectCategory(e)} style={{ backgroundColor: 'fff', boxShadow: '6px 0px 12px 0px rgba(156,156,156,1)' }}>
+          <Menu className ='mainmenu' onSelect={(e) => this.handleSelectCategory(e)} style={{ backgroundColor: 'fff', boxShadow: '6px 0px 12px 0px rgba(156,156,156,1)' }}>
             <Menu.Item key='0' style={{ height: '100px', cursor: 'default' }} disabled>
               <Row type='flex' justify='center' align='middle'>
                 <Col span={7} style={{ display: 'flex', justifyContent: 'center' }}>
                   <Avatar size={64} icon={<img src={this.props.user.avatar}/>} />
                 </Col>
                 <Col span={17}>
-                  <div style={{ fontSize: '20px', marginTop: '10px' }}>
+                  <div style={{ fontSize: '20px', color:'#595959', marginTop: '10px' }}>
                     {user.username}
                   </div>
-                  <div>
+                  <div style={{color:'#595959'}}>
                   {user.email}
                   </div>
                 </Col>
@@ -64,20 +64,16 @@ class MainPage extends Component {
               <UnorderedListOutlined />
               <span>Transcation</span>
             </Menu.Item>
-            <Menu.Item key='2' style={{ paddingLeft: '30px' }}>
+            <Menu.Item disabled key='2' style={{ paddingLeft: '30px' }}>
               <PieChartOutlined />
               <span>Stats Overview</span>
             </Menu.Item>
-            <Menu.Item key='3' style={{ paddingLeft: '30px' }}>
+            <Menu.Item disabled key='3' style={{ paddingLeft: '30px' }}>
               <CreditCardOutlined />
               <span>Account</span>
             </Menu.Item>
-            {/* <Menu.Item key='4' style={{ paddingLeft: '30px' }}>
-              <LogoutOutlined />
-              <span>Logout</span>
-            </Menu.Item> */}
           </Menu>
-          <div style={{ display: 'flex', justifyContent: 'flex-start' }}>
+          <div style={{ display: 'flex', justifyContent: 'center' }}>
             <Button type="danger" onClick={this.handleLogOut}>Log out</Button>
           </div>
         </Sider>
@@ -86,6 +82,7 @@ class MainPage extends Component {
           {this.handleRenderCategory()}
         </Content>
       </Layout>
+      </>
     )
   }
 }
